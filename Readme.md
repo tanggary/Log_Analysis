@@ -14,8 +14,8 @@ Answers 3 Queries:
 
 ### Pre-requisite
 * Need to have python version 3 and postgres installed.
- ..* Python download: https://www.python.org/downloads/
- ..* Postgres download: https://www.postgresql.org/download/
+  * Python download: https://www.python.org/downloads/
+  * Postgres download: https://www.postgresql.org/download/
 * Download database logs [here](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip).
 * Execute psql command to generate tables. ``` psql -d (database name) -f newsdata.sql ```
 * Create view in database: ``` create view authorkey AS select authors.name, articles.slug
