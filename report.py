@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import psycopg2
 from decimal import Decimal
@@ -8,11 +8,35 @@ DBNAME = "news"
 
 db = psycopg2.connect(database=DBNAME)
 c = db.cursor()
-c.execute("select articles.title, count(*) as num FROM articles join log on articles.slug = REPLACE(log.path,'/article/','') group by articles.title order by num DESC LIMIT 3")
+query1 = """
+SELECT articles.title,
+       count(*) AS num
+FROM articles
+JOIN log ON articles.slug = REPLACE(log.path, '/article/', '')
+GROUP BY articles.title
+ORDER BY num DESC
+LIMIT 3;
+"""
+c.execute(query1)
 post1 = c.fetchall()
-c.execute("select authorkey.name, count(*) as views FROM authorkey join log on authorkey.slug = REPLACE(log.path,'/article/','') GROUP by authorkey.name ORDER by views DESC")
+query2 = """
+SELECT authorkey.name,
+       count(*) AS views
+FROM authorkey
+JOIN log ON authorkey.slug = REPLACE(log.path, '/article/', '')
+GROUP BY authorkey.name
+ORDER BY views DESC;
+"""
+c.execute(query2)
 post2 = c.fetchall()
-c.execute("select distinct date_trunc('day',log.time) AS \"Day\", count(*) filter(where status like '%404%') / count(*)::numeric as percentage FROM log GROUP by date_trunc('day', log.time)")
+query3 = """
+SELECT DISTINCT date_trunc('day', log.time) AS \"Day\",
+       count(*) filter(
+WHERE status LIKE '%404%') / count(*)::numeric AS percentage
+FROM log
+GROUP BY date_trunc('day', log.time);
+"""
+c.execute(query3)
 post3 = c.fetchall()
 db.close()
 
